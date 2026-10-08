@@ -1,0 +1,417 @@
+<Window x:Class="TranslationEplAddIn.Tool.UI.SettingsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
+        mc:Ignorable="d"
+        Title="翻译设置中心" Height="570" Width="620"
+        WindowStartupLocation="CenterScreen"
+        Background="#1C1C1E" Foreground="#F5F5F5"
+        FontFamily="Microsoft YaHei, Segoe UI"
+        WindowStyle="ThreeDBorderWindow">
+
+    <Window.Resources>
+        <!-- TabControl Style -->
+        <Style TargetType="TabControl">
+            <Setter Property="Background" Value="#252526"/>
+            <Setter Property="BorderBrush" Value="#2D2D30"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="0"/>
+        </Style>
+
+        <!-- TabItem Style - Resolves high-contrast issues and matches dark mode -->
+        <Style TargetType="TabItem">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TabItem">
+                        <Border x:Name="Border" BorderThickness="1,1,1,0" BorderBrush="#2D2D30" CornerRadius="4,4,0,0" Margin="0,0,2,-1" Padding="16,8">
+                            <ContentPresenter x:Name="ContentSite"
+                                              VerticalAlignment="Center"
+                                              HorizontalAlignment="Center"
+                                              ContentSource="Header"
+                                              RecognizesAccessKey="True"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter TargetName="Border" Property="Background" Value="#252526"/>
+                                <Setter TargetName="Border" Property="BorderBrush" Value="#3F3F46"/>
+                                <Setter Property="Foreground" Value="#00BCF2"/>
+                                <Setter Property="Panel.ZIndex" Value="100"/>
+                            </Trigger>
+                            <Trigger Property="IsSelected" Value="False">
+                                <Setter TargetName="Border" Property="Background" Value="#2D2D30"/>
+                                <Setter TargetName="Border" Property="BorderBrush" Value="Transparent"/>
+                                <Setter Property="Foreground" Value="#8E8E93"/>
+                            </Trigger>
+                            <MultiTrigger>
+                                <MultiTrigger.Conditions>
+                                    <Condition Property="IsMouseOver" Value="True"/>
+                                    <Condition Property="IsSelected" Value="False"/>
+                                </MultiTrigger.Conditions>
+                                <Setter TargetName="Border" Property="Background" Value="#3A3A3C"/>
+                            </MultiTrigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- TextBox Style - Premium focused & hover visual states -->
+        <Style TargetType="TextBox">
+            <Setter Property="Background" Value="#2C2C2E"/>
+            <Setter Property="Foreground" Value="#F5F5F5"/>
+            <Setter Property="BorderBrush" Value="#3A3A3C"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="8,5"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="CaretBrush" Value="#F5F5F5"/>
+            <Style.Triggers>
+                <Trigger Property="IsFocused" Value="True">
+                    <Setter Property="BorderBrush" Value="#00BCF2"/>
+                </Trigger>
+                <MultiTrigger>
+                    <MultiTrigger.Conditions>
+                        <Condition Property="IsMouseOver" Value="True"/>
+                        <Condition Property="IsFocused" Value="False"/>
+                    </MultiTrigger.Conditions>
+                    <Setter Property="BorderBrush" Value="#48484A"/>
+                </MultiTrigger>
+            </Style.Triggers>
+        </Style>
+
+        <!-- ComboBox Style -->
+        <Style TargetType="ComboBox">
+            <Setter Property="Background" Value="#2C2C2E"/>
+            <Setter Property="Foreground" Value="#F5F5F5"/>
+            <Setter Property="BorderBrush" Value="#3A3A3C"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="8,5"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+        </Style>
+
+        <!-- ComboBoxItem Style -->
+        <Style TargetType="ComboBoxItem">
+            <Setter Property="Background" Value="#2C2C2E"/>
+            <Setter Property="Foreground" Value="#F5F5F5"/>
+            <Setter Property="Padding" Value="8,5"/>
+            <Style.Triggers>
+                <Trigger Property="IsSelected" Value="True">
+                    <Setter Property="Background" Value="#00BCF2"/>
+                    <Setter Property="Foreground" Value="White"/>
+                </Trigger>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#3A3A3C"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <!-- CheckBox Style -->
+        <Style TargetType="CheckBox">
+            <Setter Property="Foreground" Value="#F5F5F5"/>
+            <Setter Property="Margin" Value="0,8"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+        </Style>
+
+        <!-- Button Style - Modern rounded flat design with visual feedback -->
+        <Style TargetType="Button">
+            <Setter Property="Background" Value="#2C2C2E"/>
+            <Setter Property="Foreground" Value="#F5F5F5"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="16,6"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="Border" 
+                                Background="{TemplateBinding Background}" 
+                                CornerRadius="4">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" Margin="{TemplateBinding Padding}"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Border" Property="Background" Value="#3A3A3C"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="Border" Property="Background" Value="#1C1C1E"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="Border" Property="Background" Value="#2C2C2E"/>
+                                <Setter Property="Foreground" Value="#48484A"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Primary Button Style (Blue theme) -->
+        <Style x:Key="PrimaryButtonStyle" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+            <Setter Property="Background" Value="#007ACC"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#0098FF"/>
+                </Trigger>
+                <Trigger Property="IsPressed" Value="True">
+                    <Setter Property="Background" Value="#005A9E"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <!-- Danger Button Style (Red theme) -->
+        <Style x:Key="DangerButtonStyle" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+            <Setter Property="Background" Value="#A12626"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#C23B3B"/>
+                </Trigger>
+                <Trigger Property="IsPressed" Value="True">
+                    <Setter Property="Background" Value="#7D1D1D"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <!-- ListBox Style -->
+        <Style TargetType="ListBox">
+            <Setter Property="Background" Value="#1C1C1E"/>
+            <Setter Property="Foreground" Value="#F5F5F5"/>
+            <Setter Property="BorderBrush" Value="#2C2C2E"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="4"/>
+        </Style>
+
+        <!-- ListBoxItem Style -->
+        <Style TargetType="ListBoxItem">
+            <Setter Property="Padding" Value="8,6"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="#F5F5F5"/>
+            <Style.Triggers>
+                <Trigger Property="IsSelected" Value="True">
+                    <Setter Property="Background" Value="#00BCF2"/>
+                    <Setter Property="Foreground" Value="White"/>
+                </Trigger>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#2C2C2E"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+
+    <Grid Margin="16">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <TextBlock Text="EPLAN 智能翻译设置" FontSize="20" FontWeight="SemiBold" Foreground="#00BCF2" Margin="0,0,0,16"/>
+
+        <!-- Main Settings Tabs -->
+        <TabControl Grid.Row="1">
+            <!-- API Keys & Engine Selection -->
+            <TabItem Header="翻译引擎">
+                <ScrollViewer Margin="8" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                    <StackPanel Margin="2">
+                        <!-- Card 1: Default Engine Selection -->
+                        <Border Background="#252526" BorderBrush="#3F3F46" BorderThickness="1" CornerRadius="4" Padding="16" Margin="0,0,0,16">
+                            <StackPanel>
+                                <TextBlock Text="选择默认翻译引擎" Margin="0,0,0,12" FontWeight="SemiBold" Foreground="#00BCF2" FontSize="13"/>
+                                <ComboBox Name="EngineComboBox" SelectionChanged="EngineComboBox_SelectionChanged" Height="30">
+                                    <ComboBoxItem Content="Deepseek" IsSelected="True"/>
+                                    <ComboBoxItem Content="Zhipu"/>
+                                    <ComboBoxItem Content="DeepL"/>
+                                    <ComboBoxItem Content="Google"/>
+                                </ComboBox>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Deepseek Configuration Card -->
+                        <Border Name="DeepseekConfigCard" Background="#252526" BorderBrush="#3F3F46" BorderThickness="1" CornerRadius="4" Padding="16" Margin="0,0,0,16">
+                            <StackPanel>
+                                <TextBlock Text="Deepseek 智能翻译引擎设置" FontWeight="SemiBold" Margin="0,0,0,16" Foreground="#00BCF2" FontSize="13"/>
+
+                                <Grid Margin="0,5">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="130"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Text="API Key:" VerticalAlignment="Center" Foreground="#E5E5EA"/>
+                                    <TextBox Name="DeepseekKeyBox" Grid.Column="1" Height="28"/>
+                                </Grid>
+
+                                <Grid Margin="0,5">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="130"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Text="Base URL (接口地址):" VerticalAlignment="Center" Foreground="#E5E5EA"/>
+                                    <TextBox Name="DeepseekUrlBox" Grid.Column="1" Height="28"/>
+                                </Grid>
+
+                                <Grid Margin="0,5">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="130"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Text="模型名称 (Model):" VerticalAlignment="Center" Foreground="#E5E5EA"/>
+                                    <ComboBox Name="DeepseekModelBox" Grid.Column="1" Height="28" IsEditable="True">
+                                        <sys:String>deepseek-v4-flash</sys:String>
+                                        <sys:String>deepseek-chat</sys:String>
+                                        <sys:String>deepseek-reasoner</sys:String>
+                                    </ComboBox>
+                                </Grid>
+
+                                <Button Name="TestDeepseekBtn" Content="测试连接" Width="100" Height="28" Margin="0,12,0,0" HorizontalAlignment="Right" Click="TestConnection_Click"/>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Zhipu Configuration Card -->
+                        <Border Name="ZhipuConfigCard" Background="#252526" BorderBrush="#3F3F46" BorderThickness="1" CornerRadius="4" Padding="16" Margin="0,0,0,16" Visibility="Collapsed">
+                            <StackPanel>
+                                <TextBlock Text="智谱 (GLM) 智能翻译引擎设置" FontWeight="SemiBold" Margin="0,0,0,16" Foreground="#00BCF2" FontSize="13"/>
+
+                                <Grid Margin="0,5">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="130"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Text="API Key:" VerticalAlignment="Center" Foreground="#E5E5EA"/>
+                                    <TextBox Name="ZhipuKeyBox" Grid.Column="1" Height="28"/>
+                                </Grid>
+
+                                <Grid Margin="0,5">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="130"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Text="Base URL (接口地址):" VerticalAlignment="Center" Foreground="#E5E5EA"/>
+                                    <TextBox Name="ZhipuUrlBox" Grid.Column="1" Height="28"/>
+                                </Grid>
+
+                                <Grid Margin="0,5">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="130"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Text="模型名称 (Model):" VerticalAlignment="Center" Foreground="#E5E5EA"/>
+                                    <TextBox Name="ZhipuModelBox" Grid.Column="1" Height="28"/>
+                                </Grid>
+
+                                <Button Name="TestZhipuBtn" Content="测试连接" Width="100" Height="28" Margin="0,12,0,0" HorizontalAlignment="Right" Click="TestConnection_Click"/>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- DeepL Configuration Card -->
+                        <Border Name="DeeplConfigCard" Background="#252526" BorderBrush="#3F3F46" BorderThickness="1" CornerRadius="4" Padding="16" Margin="0,0,0,16" Visibility="Collapsed">
+                            <StackPanel>
+                                <TextBlock Text="DeepL 翻译引擎设置" FontWeight="SemiBold" Margin="0,0,0,16" Foreground="#00BCF2" FontSize="13"/>
+
+                                <Grid Margin="0,5">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="130"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Text="API Key:" VerticalAlignment="Center" Foreground="#E5E5EA"/>
+                                    <TextBox Name="DeeplKeyBox" Grid.Column="1" Height="28"/>
+                                </Grid>
+
+                                <Button Name="TestDeeplBtn" Content="测试连接" Width="100" Height="28" Margin="0,12,0,0" HorizontalAlignment="Right" Click="TestConnection_Click"/>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Google Configuration Card -->
+                        <Border Name="GoogleConfigCard" Background="#252526" BorderBrush="#3F3F46" BorderThickness="1" CornerRadius="4" Padding="16" Margin="0,0,0,16" Visibility="Collapsed">
+                            <StackPanel>
+                                <TextBlock Text="Google 翻译引擎设置" FontWeight="SemiBold" Margin="0,0,0,16" Foreground="#00BCF2" FontSize="13"/>
+
+                                <Grid Margin="0,5">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="130"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Text="API Key:" VerticalAlignment="Center" Foreground="#E5E5EA"/>
+                                    <TextBox Name="GoogleKeyBox" Grid.Column="1" Height="28"/>
+                                </Grid>
+
+                                <Button Name="TestGoogleBtn" Content="测试连接" Width="100" Height="28" Margin="0,12,0,0" HorizontalAlignment="Right" Click="TestConnection_Click"/>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+
+            <!-- Translation Strategies -->
+            <TabItem Header="策略配置">
+                <ScrollViewer Margin="8" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                    <StackPanel Margin="2">
+                        <!-- Card 1: Spelling Logic -->
+                        <Border Background="#252526" BorderBrush="#3F3F46" BorderThickness="1" CornerRadius="4" Padding="16" Margin="0,0,0,16">
+                            <StackPanel>
+                                <TextBlock Text="显示与拼写逻辑" FontWeight="SemiBold" Foreground="#00BCF2" Margin="0,0,0,12" FontSize="13"/>
+                                
+                                <CheckBox Name="AppendModeCheckBox" Content="追加模式 (保留源语言，追加译文)" Checked="AppendModeCheckBox_Checked" Unchecked="AppendModeCheckBox_Unchecked"/>
+                                
+                                <Grid Margin="20,8,0,12">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="110"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Text="追加分隔符:" VerticalAlignment="Center" Foreground="#E5E5EA"/>
+                                    <ComboBox Name="SeparatorComboBox" Grid.Column="1" Height="28">
+                                        <ComboBoxItem Content="换行符 (\n)" IsSelected="True"/>
+                                        <ComboBoxItem Content="斜杠 ( / )"/>
+                                        <ComboBoxItem Content="波浪号 ( ~ )"/>
+                                        <ComboBoxItem Content="横杠 ( - )"/>
+                                    </ComboBox>
+                                </Grid>
+
+                                <CheckBox Name="NativeDictCheckBox" Content="写入 EPLAN 原生字典并调用原生翻译"/>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Card 2: Regex Isolation -->
+                        <Border Background="#252526" BorderBrush="#3F3F46" BorderThickness="1" CornerRadius="4" Padding="16">
+                            <StackPanel>
+                                <TextBlock Text="正则表达式隔离保护 (防误译，每行一条)" FontWeight="SemiBold" Foreground="#00BCF2" Margin="0,0,0,12" FontSize="13"/>
+                                <TextBox Name="RegexRulesBox" Height="100" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" TextWrapping="Wrap"/>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+
+            <!-- Glossaries and Dictionaries -->
+            <TabItem Header="本地术语库">
+                <Border Background="#252526" BorderBrush="#3F3F46" BorderThickness="1" CornerRadius="4" Padding="16" Margin="10">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <TextBlock Text="配置术语对照库 (支持 CSV, XLSX, TMX, TBX)" FontWeight="SemiBold" Foreground="#00BCF2" Margin="0,0,0,12" FontSize="13"/>
+                        
+                        <ListBox Name="GlossaryListBox" Grid.Row="1" Margin="0,0,0,12"/>
+                        
+                        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right">
+                            <Button Content="添加本地库..." Width="110" Height="30" Margin="0,0,10,0" Click="AddGlossary_Click"/>
+                            <Button Content="移除" Style="{StaticResource DangerButtonStyle}" Width="80" Height="30" Click="RemoveGlossary_Click"/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+            </TabItem>
+        </TabControl>
+
+        <!-- Actions -->
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,16,0,0">
+            <Button Content="保存并关闭" Style="{StaticResource PrimaryButtonStyle}" Width="110" Height="32" Margin="0,0,10,0" Click="SaveButton_Click"/>
+            <Button Content="取消" Width="80" Height="32" Click="CancelButton_Click"/>
+        </StackPanel>
+    </Grid>
+</Window>

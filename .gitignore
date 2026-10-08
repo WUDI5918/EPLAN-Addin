@@ -1,0 +1,20 @@
+## Visual Studio / C#
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+*.log
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+packages/
+nuget.exe
+
+# OS generated
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+.DS_Store

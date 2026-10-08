@@ -1,0 +1,191 @@
+<Window x:Class="TranslationEplAddIn.Tool.UI.PageSelectionWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="选择翻译页面" Height="550" Width="480"
+        WindowStartupLocation="CenterOwner"
+        ShowInTaskbar="False"
+        Background="#F0ECE1" Foreground="#3D3D3A"
+        FontFamily="Microsoft YaHei, Segoe UI">
+    
+    <Window.Resources>
+        <!-- TextBox Style -->
+        <Style TargetType="TextBox">
+            <Setter Property="Background" Value="#FFFFFF"/>
+            <Setter Property="Foreground" Value="#3D3D3A"/>
+            <Setter Property="BorderBrush" Value="#DDDBCF"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="8,2"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="CaretBrush" Value="#3D3D3A"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TextBox">
+                        <Grid>
+                            <Border x:Name="Border" 
+                                    BorderBrush="{TemplateBinding BorderBrush}" 
+                                    BorderThickness="{TemplateBinding BorderThickness}" 
+                                    Background="{TemplateBinding Background}" 
+                                    CornerRadius="4"
+                                    SnapsToDevicePixels="True" 
+                                    Padding="{TemplateBinding Padding}">
+                                <ScrollViewer x:Name="PART_ContentHost" Focusable="false" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"/>
+                            </Border>
+                            <TextBlock x:Name="WatermarkPrompt" 
+                                       Text="{TemplateBinding Tag}" 
+                                       Foreground="#A8A69F" 
+                                       FontSize="11" 
+                                       Margin="12,0" 
+                                       IsHitTestVisible="False" 
+                                       VerticalAlignment="Center" 
+                                       Visibility="Collapsed"/>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="Text" Value="">
+                                <Setter TargetName="WatermarkPrompt" Property="Visibility" Value="Visible"/>
+                            </Trigger>
+                            <Trigger Property="IsFocused" Value="True">
+                                <Setter Property="BorderBrush" Value="#CD7F62"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="BorderBrush" Value="#B5B3A7"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Standard Button Style -->
+        <Style TargetType="Button">
+            <Setter Property="Background" Value="#494944"/>
+            <Setter Property="Foreground" Value="#FFFFFF"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="14,6"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="Border" 
+                                Background="{TemplateBinding Background}" 
+                                CornerRadius="6">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" Margin="{TemplateBinding Padding}"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Border" Property="Background" Value="#5C5C57"/>
+                                <Setter TargetName="Border" Property="TextElement.Foreground" Value="#FFFFFF"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="Border" Property="Background" Value="#353532"/>
+                                <Setter TargetName="Border" Property="TextElement.Foreground" Value="#FFFFFF"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="Border" Property="Background" Value="#EBE9DF"/>
+                                <Setter Property="Foreground" Value="#A8A69F"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- CheckBox Style -->
+        <Style TargetType="CheckBox">
+            <Setter Property="Foreground" Value="#3D3D3A"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Margin" Value="0,2"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="CheckBox">
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <Grid Width="16" Height="16">
+                                <Border x:Name="Box" Background="#FFFFFF" BorderBrush="#DDDBCF" BorderThickness="1" CornerRadius="3" />
+                                <Path x:Name="Check" Width="10" Height="8" Fill="#CD7F62" Data="M9.293 0.707a1 1 0 0 1 0 1.414l-5 5a1 1 0 0 1-1.414 0l-2-2a1 1 0 1 1 1.414-1.414L3.5 4.793l4.293-4.293a1 1 0 0 1 1.414 0z" Stretch="Uniform" Visibility="Collapsed"/>
+                            </Grid>
+                            <ContentPresenter Margin="8,0,0,0" VerticalAlignment="Center"/>
+                        </StackPanel>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="Box" Property="BorderBrush" Value="#CD7F62"/>
+                                <Setter TargetName="Check" Property="Visibility" Value="Visible"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Box" Property="BorderBrush" Value="#B5B3A7"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- ListBox Styling -->
+        <Style TargetType="ListBox">
+            <Setter Property="Background" Value="#FFFFFF"/>
+            <Setter Property="Foreground" Value="#3D3D3A"/>
+            <Setter Property="BorderBrush" Value="#EBE9DF"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="4"/>
+        </Style>
+    </Window.Resources>
+
+    <Grid Margin="16">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/> <!-- Title / Search -->
+            <RowDefinition Height="Auto"/> <!-- Select Actions -->
+            <RowDefinition Height="*"/>    <!-- Page List -->
+            <RowDefinition Height="Auto"/> <!-- Buttons -->
+        </Grid.RowDefinitions>
+
+        <!-- Top Search Box -->
+        <StackPanel Grid.Row="0" Margin="0,0,0,12">
+            <TextBlock Text="搜索页面" FontSize="11" Foreground="#7C7A74" Margin="0,0,0,4" FontWeight="SemiBold"/>
+            <TextBox Name="SearchTextBox" Height="28" Tag="输入页面代码或描述过滤..." TextChanged="SearchTextBox_TextChanged"/>
+        </StackPanel>
+
+        <!-- Action buttons to Select/Deselect All -->
+        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,8">
+            <Button Name="SelectAllBtn" Content="全选" Width="70" Height="24" Margin="0,0,8,0" Click="SelectAllBtn_Click" 
+                    Background="#E5E4DB" Foreground="#626058" FontSize="11"/>
+            <Button Name="DeselectAllBtn" Content="全不选" Width="70" Height="24" Click="DeselectAllBtn_Click"
+                    Background="#E5E4DB" Foreground="#626058" FontSize="11"/>
+        </StackPanel>
+
+        <!-- Scrollable list of Pages -->
+        <Border Grid.Row="2" BorderBrush="#EBE9DF" BorderThickness="1" CornerRadius="6" Background="#FFFFFF" Padding="4" Margin="0,0,0,16">
+            <ListBox Name="PagesListBox" BorderThickness="0" Background="Transparent" 
+                     ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                     HorizontalContentAlignment="Stretch">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <CheckBox IsChecked="{Binding IsSelected, Mode=TwoWay}" Margin="4" Click="CheckBox_Click">
+                            <CheckBox.Content>
+                                <Grid Margin="4,0,0,0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="150"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0" Text="{Binding PageName}" FontWeight="Bold" Foreground="#3D3D3A" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
+                                    <TextBlock Grid.Column="1" Text="{Binding PageDescription}" Foreground="#7C7A74" FontSize="11" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" Margin="8,0,0,0"/>
+                                </Grid>
+                            </CheckBox.Content>
+                        </CheckBox>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </Border>
+
+        <!-- Action Row -->
+        <Grid Grid.Row="3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            
+            <TextBlock Name="SelectionCountTextBlock" Text="已选择: 0 / 0" VerticalAlignment="Center" Foreground="#7C7A74" FontSize="11" FontWeight="SemiBold"/>
+            
+            <Button Grid.Column="1" Name="ConfirmBtn" Content="确定" Width="80" Height="30" Margin="0,0,8,0" Click="ConfirmBtn_Click" FontWeight="Bold"/>
+            <Button Grid.Column="2" Name="CancelBtn" Content="取消" Width="80" Height="30" Click="CancelBtn_Click" Background="#E5E4DB" Foreground="#626058"/>
+        </Grid>
+    </Grid>
+</Window>
